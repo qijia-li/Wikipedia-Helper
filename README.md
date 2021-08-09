@@ -9,3 +9,8 @@ Wikipedia Helper is a convsersational chatbot enables users to quickly find usef
 
 ### Instructions
 Start the Django app by running python manage.py runserver 0.0.0.0:8000
+
+
+### Instructions
+https://user-images.githubusercontent.com/61059434/128682028-a6dcb55a-9b12-47ba-900f-4f05a0250fcd.mp4
+
