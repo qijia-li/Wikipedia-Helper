@@ -1,0 +1,172 @@
+{% load static %}
+<!-- <img src="{% static 'img/chatterbot.png' %}" alt="My image"> -->
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TextCheater</title>
+  <!-- <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" /> -->
+  <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
+
+  <link rel="stylesheet" href="{% static 'style.css' %}" />
+  <link rel="stylesheet" href="{% static 'custom.css' %}" />
+</head>
+
+<body>
+
+  <div class="container">
+    <article role="log" aria-live="polite" aria-atomic="false">
+      <ul class="chat">
+      </ul>
+
+      <noscript>
+        <ul class="chat">
+          <li class="message bot show">
+            <p>I'm sorry, but you need JavaScript turned on for this website to function.</p>
+          </li>
+
+
+        </ul>
+      </noscript>
+    </article>
+    <div class="content" role="document" aria-hidden="true" aria-label="Information">
+    </div>
+  </div>
+
+
+  <script src="{% static 'js/app.js' %}"></script>
+  <script src="{% static 'js/jquery.js' %}"></script>
+  <script src="{% static 'js/js.cookie.js' %}"></script>
+  <script>
+
+    var chatterbotUrl = '{% url "chatterbot" %}';
+    var csrftoken = Cookies.get('csrftoken');
+
+    function csrfSafeMethod(method) {
+      // these HTTP methods do not require CSRF protection
+      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    $.ajaxSetup({
+      beforeSend: function (xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+      }
+    });
+
+    var $myUrl = window.$myUrl;
+    var $myPara = window.$myPara;
+    var $myQas = window.$myQas;
+
+    // check the values by pressing number keyboard '5'
+    document.addEventListener('keydown', e => {
+      if (e.keyCode === 101) {
+        console.log('___________________________________________________')
+        console.log($myUrl)
+        console.log($myQas)
+        console.log($myPara)
+      }
+    });
+
+
+
+    function submitInput() {
+      if ($myUrl) {
+        var inputData = {
+          'myUrl': $myUrl.value,
+          'text': $myQas.value,
+          // 'paraTxt': $myPara.value,
+        };
+      } else if ($myPara) {
+        var inputData = {
+          // 'myUrl': $myUrl.value,
+          'text': $myQas.value,
+          'paraTxt': $myPara.value,
+        };
+      }
+
+
+      // Display the user's input on the web page
+      // createRow(inputData.text);
+      var $submit = $.ajax({
+        type: 'POST',
+        url: chatterbotUrl,
+        data: JSON.stringify(inputData),
+        contentType: 'application/json'
+      });
+
+      // create loading signals
+      createLoad(loadHTML)
+
+
+      $submit.done(function (statement) {
+
+        // remove loading signal before answer return
+        var loadBox = $(".chat").find("li.loader");
+        loadBox.remove()
+
+        // return answer from pretrained NLP model
+        newMessage(statement.text, 'bot');
+
+        // create new qas box
+        newMessage(qasBox, 'user');
+
+        // Scroll to the bottom of the chat interface
+        $chatlog[0].scrollTop = $chatlog[0].scrollHeight;
+      });
+
+      $submit.fail(function () {
+        // TODO: Handle errors
+        // errorMsg();
+      });
+    }
+
+
+
+    document.addEventListener('keyup', e => {
+      if (e.keyCode === 13 && $myQas) {
+        submitInput();
+
+      }
+    });
+
+    // document.addEventListener('keydown', e => {
+    //   if ((e.keyCode === 13 && window.$myUrl) || (e.keyCode === 13 && window.$myPara)) {
+    //     submitInput();
+    //   }
+    // });
+
+    // document.getElementById("js-qas").addEventListener('keydown', e => {
+    //   if (e.keyCode === 13 && document.getElementById("js-qas")) {
+    //     newMyQas(qasBox)
+    //   }
+    // });
+
+    // document.addEventListener('keydown', e => {
+    //   if (e.keyCode === 13 && document.getElementById("js-qas")) {
+    //     newMyQas(qasBox)
+    //   }
+    // });
+
+
+    // $myPara.keydown(function (event) {
+    //   // Submit the input when the enter button is pressed
+    //   if (event.keyCode == 13) {
+    //     submitPara();
+    //   }
+    // });
+
+    // $myQas.keydown(function (event) {
+    //   // Submit the input when the enter button is pressed
+    //   if (event.keyCode == 13) {
+    //     submitQas();
+    //   }
+    // });
+  </script>
+</body>
+
+</html>

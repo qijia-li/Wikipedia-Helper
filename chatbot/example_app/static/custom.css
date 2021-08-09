@@ -1,0 +1,36 @@
+.inputbox {
+  /* color: #6d6d6d; */
+  background-color: #e1e1e1;
+  margin: 0 0.3em 0.5em 0;
+  border-style: solid;
+  border-color: #e1e1e1;
+  font-size: 0.9em;
+  line-height: 1.5;
+  font-weight: 300;
+  outline: none;
+  width: 20em;
+  /* margin: 0.5em 1em; */
+  text-align: left;
+  padding: 0.5em 1em;
+  border-radius: 10px;
+}
+
+.loader{
+    margin: 2em 2em;
+    width: 40%;
+    height:46.6px;
+    text-align: center;
+    padding: 1em;
+    margin: 0 auto 0em;
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+  }
+  
+  /*
+    Set the color of the icon
+  */
+  svg path,
+  svg rect{
+    fill: #933;
+  }
